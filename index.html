@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Serverless Architecture</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!-- Required For Cognito Auth -->
+   <script src="scripts/jsbn.js"></script>
+   <script src="scripts/jsbn2.js"></script>
+   <script src="scripts/sjcl.js"></script>
+   <script src="scripts/moment.js"></script>
+   <script src="scripts/aws-cognito-sdk.min.js"></script>
+   <script src="scripts/amazon-cognito-identity.min.js"></script>
+   <script src="scripts/aws-sdk.min.js"></script>
+
+   <script>
+      AWS.config.region = 'us-east-1'; // Region
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+         IdentityPoolId: 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91' // your identity pool id here
+      });
+
+      AWSCognito.config.region = 'us-east-1';
+      AWSCognito.config.credentials = new AWS.CognitoIdentityCredentials({
+         IdentityPoolId: 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91' // your identity pool id here
+      });
+   </script>
+
+   <style>
+      .fill-orb {
+         box-sizing: border-box;
+         width: 60px;
+         height: 60px;
+         overflow: hidden;
+         position: absolute;
+         top: 50%;
+         margin-top: -30px;
+         left: 50%;
+         margin-left: -30px;
+         text-align: center;
+         font-size: 0;
+         border-radius: 50%;
+         transform: translateZ(0);
+         -webkit-transform: translateZ(0);
+      }
+
+      .fill-orb > div {
+         position: absolute;
+         transform: translateX(-35px) translateY(60px);
+         -webkit-transform: translateX(-35px) translateY(60px);
+         animation: fill-orb-up-motion 3s ease-out infinite;
+         -webkit-animation: fill-orb-up-motion 3s ease-out infinite;
+      }
+
+      .fill-orb > div::after {
+         display: block;
+         box-sizing: border-box;
+         content: '';
+         width: 0;
+         height: 0;
+         position: absolute;
+         transform-origin: 70px 100px;
+
+         border-radius: 50%;
+         border-top: 100px solid rgba(0, 0, 0, 1);
+         border-bottom: 100px solid rgba(0, 0, 0, 1);
+         border-left: 70px solid rgba(0, 0, 0, 1);
+         border-right: 70px solid rgba(0, 0, 0, 1);
+
+         animation: fill-orb-wave-motion 2s ease-out infinite;
+         -webkit-animation: fill-orb-wave-motion 2s ease-out infinite;
+      }
+
+      .fill-orb::after {
+         display: block;
+         box-sizing: border-box;
+         content: 'RS';
+         width: 60px;
+         height: 60px;
+         line-height: 60px;
+         position: absolute;
+         font-size: 30px;
+         font-weight: 800;
+         color: #fff;
+         border-radius: 50%;
+      }
+
+      @keyframes fill-orb-up-motion {
+         from {
+            transform: translateX(-35px) translateY(60px);
+         }
+         to {
+            transform: translateX(-35px) translateY(-20px);
+         }
+      }
+
+      @-webkit-keyframes fill-orb-up-motion {
+         from {
+            -webkit-transform: translateX(-35px) translateY(60px);
+         }
+         to {
+            -webkit-transform: translateX(-35px) translateY(-20px);
+         }
+      }
+
+      @keyframes fill-orb-wave-motion {
+         from {
+            transform: rotate(0deg);
+         }
+         to {
+            transform: rotate(359deg);
+         }
+      }
+
+      @-webkit-keyframes fill-orb-wave-motion {
+         from {
+            -webkit-transform: rotate(0deg);
+         }
+         to {
+            -webkit-transform: rotate(359deg);
+         }
+      }
+   </style>
+</head>
+<body>
+<div class="splash">
+   <div class="fill-orb">
+      <div></div>
+   </div>
+</div>
+<script src="bundle.js"></script>
+</body>
+</html>

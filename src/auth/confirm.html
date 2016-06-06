@@ -1,0 +1,25 @@
+<template>
+   <div class="container">
+      <div class="row" if.bind="!session.confirmed">
+         <div class="col-xs-12">
+            <form class="form-inline" submit.delegate="confirmUser()">
+               <div class="form-group">
+                  <label for="username" class="sr-only">Code</label>
+                  <input class="form-control" value.bind="username" id="username" placeholder="Enter user name">
+               </div>
+               <div class="form-group">
+                  <label for="code" class="sr-only">Code</label>
+                  <input class="form-control" value.bind="code" id="code" placeholder="Enter code">
+               </div>
+               <button type="submit" class="btn btn-primary">Confirm</button>
+            </form>
+         </div>
+      </div>
+      <div class="row" if.bind="session.confirmed">
+         <div class="col-xs-12">
+            <h4>Your email address has been confirmed</h4>
+            <a route-href="route: login;" class="btn btn-primary">Login</a>
+         </div>
+      </div>
+   </div>
+</template>

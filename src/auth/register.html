@@ -1,0 +1,36 @@
+<template>
+   <div class="container">
+      <div class="row" if.bind="!session.registered">
+         <div class="col-xs-12">
+            <form submit.delegate="registerUser()">
+               <fieldset class="form-group">
+                  <label for="name">Name</label>
+                  <input class="form-control" value.bind="user.name" id="name" placeholder="Enter name">
+                  <small class="text-muted">What do they call ya?</small>
+               </fieldset>
+               <fieldset class="form-group">
+                  <label for="email">Email address</label>
+                  <input type="email" class="form-control" value.bind="user.email" id="email" placeholder="Enter email">
+                  <small class="text-muted">We'll never share your email with anyone else.</small>
+               </fieldset>
+               <fieldset class="form-group">
+                  <label for="username">User Name</label>
+                  <input class="form-control" id="username" value.bind="user.username" placeholder="Enter user name">
+               </fieldset>
+               <fieldset class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" value.bind="user.password" id="password" placeholder="Password">
+               </fieldset>
+               <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+         </div>
+      </div>
+      <div class="row" if.bind="session.registered">
+         <div class="col-xs-12">
+            <h4>You are now registered as ${user.username}.</h4>
+            <p>A confirmation email containing your confirmation code has been sent to ${email}</p>
+            <a route-href="route: confirm; params.bind:{username: user.username}" class="btn btn-primary">Click to Confirm</a>
+         </div>
+      </div>
+   </div>
+</template>

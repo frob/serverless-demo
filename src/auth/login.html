@@ -1,0 +1,24 @@
+<template>
+   <div class="container">
+      <div class="row" if.bind="!session.user">
+         <div class="col-xs-12">
+            <form submit.delegate="loginUser()">
+               <fieldset class="form-group">
+                  <label for="username">User Name</label>
+                  <input class="form-control" id="username" value.bind="username" placeholder="Enter user name">
+               </fieldset>
+               <fieldset class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" value.bind="password" id="password" placeholder="Password">
+               </fieldset>
+               <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+         </div>
+      </div>
+      <div class="row" if.bind="session.user">
+         <div class="col-xs-12">
+            Logged in as ${session.user.username}
+         </div>
+      </div>
+   </div>
+</template>

@@ -1,0 +1,28 @@
+<template>
+
+   <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+      <a class="navbar-brand" href="#">Serverless Architecture</a>
+      <ul class="nav navbar-nav">
+         <li repeat.for="row of router.navigation" class="nav-item ${row.isActive ? 'active' : ''}">
+            <a class="nav-link" href.bind="row.href">${row.title}</a>
+         </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right pull-right">
+         <li class="loader" if.bind="router.isNavigating">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+         </li>
+         <li class="nav-item" if.bind="!session.user">
+            <a class="nav-link" route-href="route: register">Register</a>
+         </li>
+         <li class="nav-item" if.bind="!session.user">
+            <a class="nav-link" route-href="route: login">Login</a>
+         </li>
+         <li class="nav-item" if.bind="session.user">
+            <a href="#" class="nav-link">${session.user.username}</a>
+         </li>
+         <li class="nav-item" if.bind="session.user">
+            <a href="#" class="nav-link" click.delegate="userLogout()"><small>logout</small></a>
+         </li>
+      </ul>
+   </nav>
+</template>
