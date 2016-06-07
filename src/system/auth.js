@@ -20,8 +20,7 @@ export class Auth{
       UserPoolId: this.userPoolId,
       ClientId: this.appClientId
    };
-   userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
-   
+
    constructor(session){
       this.session = session;
    }
@@ -29,6 +28,8 @@ export class Auth{
    registerUser(user) {
       // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
       AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
 
       let attributeList = [];
 
@@ -45,7 +46,7 @@ export class Auth{
       attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
       attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataName));
 
-      this.userPool.signUp(user.username, user.password, attributeList, null, (err, result) => {
+      userPool.signUp(user.username, user.password, attributeList, null, (err, result) => {
          if (err) {
             console.log(err);
             return;
@@ -58,9 +59,11 @@ export class Auth{
       // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
       AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
 
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+
       let userData = {
          Username: username,
-         Pool: this.userPool
+         Pool: userPool
       };
 
       let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
@@ -78,6 +81,8 @@ export class Auth{
       // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
       AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
 
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+
       let authenticationData = {
          Username: username,
          Password: password
@@ -87,7 +92,7 @@ export class Auth{
 
       let userData = {
          Username: username,
-         Pool: this.userPool
+         Pool: userPool
       };
 
       let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
@@ -104,7 +109,9 @@ export class Auth{
    }
 
    getSession(){
-      let cognitoUser = this.userPool.getCurrentUser();
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+
+      let cognitoUser = userPool.getCurrentUser();
 
       if (cognitoUser != null) {
          cognitoUser.getSession((err, session) => {
@@ -120,7 +127,8 @@ export class Auth{
    }
    
    logoutUser(){
-      let cognitoUser = this.userPool.getCurrentUser();
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let cognitoUser = userPool.getCurrentUser();
       this.session.user = null;
       if(cognitoUser != null) cognitoUser.signOut();
    }
