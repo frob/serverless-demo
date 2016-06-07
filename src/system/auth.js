@@ -9,10 +9,13 @@ import {Session} from './session';
 export class Auth{
 
    // App specific
+   identityPoolId = 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91';
    userPoolId = 'us-east-1_fgCWraBkF';
    appClientId = '57lq262n28o7ddt8i36jcjj7qd';
+   region = 'us-east-1';
 
    // constructed
+   loginId = `cognito-idp.${this.region}.amazonaws.com/${this.userPoolId}`;
    poolData = {
       UserPoolId: this.userPoolId,
       ClientId: this.appClientId
@@ -97,6 +100,7 @@ export class Auth{
       cognitoUser.authenticateUser(authenticationDetails, {
          onSuccess: (result) => {
             this.session.user = cognitoUser;
+            this.setCredentials(result.getIdToken().getJwtToken());
          },
          onFailure: (err) => {
             console.log(err);
@@ -116,6 +120,7 @@ export class Auth{
                return;
             }
             this.session.user = cognitoUser;
+            this.setCredentials(session.getIdToken().getJwtToken());
          });
       }
       else this.logoutUser();
@@ -126,5 +131,24 @@ export class Auth{
       let cognitoUser = userPool.getCurrentUser();
       this.session.user = null;
       if(cognitoUser != null) cognitoUser.signOut();
+   }
+
+   /* Helper Functions */
+
+   setCredentials(token){
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+         IdentityPoolId: this.identityPoolId,
+         Logins:{}
+      });
+      AWS.config.credentials.params.Logins[this.loginId] = token;
+   }
+
+   getUserAttributes(cognitoUser){
+      return new Promise((resolve, reject) => {
+         cognitoUser.getUserAttributes((err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+         })
+      })
    }
 }
