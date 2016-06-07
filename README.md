@@ -22,3 +22,7 @@ to follow along in this series.
 2. `cd reponame`
 3. `npm install`
 4. `npm run dev`
+
+###Branches
+simple - example of simple login using Cognito User Pools
+federated - combines simple login with Cognito Identity Pools to create a federated login with access to AWS
