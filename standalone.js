@@ -1,11 +1,8 @@
 // App specific
-var identityPoolId = 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91';
-var userPoolId = 'us-east-1_9n2I4LpaH';//'us-east-1_fgCWraBkF';
-var appClientId = '4s9cfpggqrsqgccachl12en215';//'57lq262n28o7ddt8i36jcjj7qd';
-var region = 'us-east-1';
+var userPoolId = 'us-east-1_fgCWraBkF';
+var appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 
 // constructed
-var loginId = 'cognito-idp.' + region + '.amazonaws.com/' + userPoolId;
 var poolData = {
    UserPoolId: userPoolId,
    ClientId: appClientId
@@ -89,7 +86,6 @@ function loginUser(username, password)
    cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
          alert(username + ' Logged In');
-         setCredentials(result.getIdToken().getJwtToken());
       },
       onFailure: (err) => {
          console.log(err);
@@ -110,7 +106,6 @@ function getSession()
             return;
          }
          $('.session').text(session.getIdToken().getJwtToken());
-         setCredentials(session.getIdToken().getJwtToken());
       });
    }
    else logoutUser();
@@ -122,15 +117,4 @@ function logoutUser()
    var cognitoUser = userPool.getCurrentUser();
    alert('Logged Out');
    if (cognitoUser != null) cognitoUser.signOut();
-}
-
-/* Helper Functions */
-
-function setCredentials(token)
-{
-   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: identityPoolId,
-      Logins: {}
-   });
-   AWS.config.credentials.params.Logins[loginId] = token;
 }
