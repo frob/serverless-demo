@@ -7,6 +7,8 @@ export class Auth {
    // App specific
    userPoolId = 'us-east-1_fgCWraBkF';
    appClientId = '57lq262n28o7ddt8i36jcjj7qd';
+   identityPoolId = 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91';
+   region = 'us-east-1';
 
    constructor(session) {
       this.session = session;
@@ -22,6 +24,9 @@ export class Auth {
 
       // create user pool
       this.userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+
+      // construct login id
+      this.loginId = `cognito-idp.${this.region}.amazonaws.com/${this.userPoolId}`;
    }
 
    registerUser(user) {
@@ -83,6 +88,7 @@ export class Auth {
 
       cognitoUser.authenticateUser(authDetails, {
          onSuccess: (result) => {
+            this.setCredentials(result.getIdToken().getJwtToken());
             this.session.user = cognitoUser;
          },
          onFailure: (err) => {
@@ -95,12 +101,14 @@ export class Auth {
       let cognitoUser = this.userPool.getCurrentUser();
 
       if (cognitoUser != null) {
-         cognitoUser.getSession((err, session) => {
+         cognitoUser.getSession((err, result) => {
             if (err) {
                this.logoutUser();
-               return;
             }
-            this.session.user = cognitoUser;
+            else {
+               this.setCredentials(result.getIdToken().getJwtToken());
+               this.session.user = cognitoUser;
+            }
          });
       }
       else this.logoutUser();
@@ -119,5 +127,13 @@ export class Auth {
             else resolve(result);
          })
       })
+   }
+
+   setCredentials(token){
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+         IdentityPoolId: this.identityPoolId,
+         Logins:{}
+      });
+      AWS.config.credentials.params.Logins[this.loginId] = token;
    }
 }

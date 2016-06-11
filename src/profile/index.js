@@ -6,15 +6,29 @@ import {inject} from 'aurelia-framework';
 import {Auth} from '../system/auth';
 
 @inject(Auth)
-export class Index{
+export class Index {
 
-   constructor(auth){
+   fileChooser = [];
+
+   constructor(auth) {
       this.auth = auth;
+
+      //AWS.config.credentials.get();
+      this.bucket = new AWS.S3({params: {Bucket: 'serverless-inbox'}});
    }
 
-   getProfile(){
+   uploadFile() {
+      let file = this.fileChooser.files[0];
+      let params = {Key: file.name, ContentType: file.type, Body: file};
+      this.bucket.upload(params, (err, data) => {
+         if (err) console.log(err);
+         else(console.log(data));
+      })
+   }
+
+   getProfile() {
       this.auth.getUserAttributes()
-         .then(response =>{
+         .then(response => {
             response.map(item => {
                return this[item.Name] = item.Value;
             })
@@ -24,7 +38,7 @@ export class Index{
          })
    }
 
-   activate(){
+   activate() {
       this.getProfile();
    }
 }

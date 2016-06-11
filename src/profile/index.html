@@ -2,8 +2,22 @@
    <div class="container">
       <div class="row">
          <div class="col-xs-12">
-            <h4>${name}</h4>
-            <h5>${email}</h5>
+            <div class="media">
+               <div class="media-left">
+                  <i if.bind="!icon" class="fa fa-user fa-4x"></i>
+                  <img if.bind="icon" class="media-object" alt="${name} icon">
+               </div>
+               <div class="media-body">
+                  <h4 class="media-heading">${name}</h4>
+                  ${email}
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-xs-12">
+            <input ref="fileChooser" type="file">
+            <button class="btn btn-primary" click.delegate="uploadFile()">Upload</button>
          </div>
       </div>
    </div>
