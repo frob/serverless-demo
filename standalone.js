@@ -13,7 +13,6 @@ var poolData = {
    UserPoolId: userPoolId,
    ClientId: appClientId
 };
-
 var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
 
 function registerUser(user) {
