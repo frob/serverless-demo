@@ -84,11 +84,23 @@
          </form>
       </div>
       <div class="col-sm-6">
+         <h2>Logout</h2>
+         <button id="btnLogout" class="btn btn-primary">Logout</button>
+      </div>
+   </div>
+   <div class="row p-t-3">
+      <div class="col-sm-6">
+         <h2>Profile</h2>
+         <form id="frmProfile">
+            <h4 id="profileName"></h4>
+            <h5 id="profileEmail"></h5>
+            <button type="submit" class="btn btn-primary">Get Profile</button>
+         </form>
+      </div>
+      <div class="col-sm-6">
          <h2>Session Token</h2>
          <form id="frmSession">
-            <small class="session">
-               None
-            </small><br/>
+            <div class="session"></div>
             <button type="submit" class="btn btn-primary">Get Session</button>
          </form>
       </div>
@@ -106,18 +118,27 @@
       event.preventDefault();
    });
 
-   $('#frmConfirm').submit(function(event){
+   $('#frmConfirm').submit(function (event) {
       confirmUser($('#frmConfirm #username').val(), $('#frmConfirm #code').val());
       event.preventDefault();
    });
 
-   $('#frmLogin').submit(function(event){
+   $('#frmLogin').submit(function (event) {
       loginUser($('#frmLogin #username').val(), $('#frmLogin #password').val());
       event.preventDefault();
    });
 
-   $('#frmSession').submit(function(event){
+   $('#frmSession').submit(function (event) {
       getSession();
+      event.preventDefault();
+   });
+
+   $('#btnLogout').click(function(){
+      logoutUser();
+   });
+
+   $('#frmProfile').submit(function (event) {
+      getUserAttributes();
       event.preventDefault();
    })
 </script>

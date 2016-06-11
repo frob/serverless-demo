@@ -14,15 +14,7 @@
    <script src="scripts/aws-sdk.min.js"></script>
 
    <script>
-      AWS.config.region = 'us-east-1'; // Region
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-         IdentityPoolId: 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91' // your identity pool id here
-      });
-
       AWSCognito.config.region = 'us-east-1';
-      AWSCognito.config.credentials = new AWS.CognitoIdentityCredentials({
-         IdentityPoolId: 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91' // your identity pool id here
-      });
    </script>
 
    <style>

@@ -6,6 +6,7 @@ var identityPoolId = 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91';
 var userPoolId = 'us-east-1_fgCWraBkF';
 var appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 var region = 'us-east-1';
+var user;
 
 // constructed
 var loginId = 'cognito-idp.' + region + '.amazonaws.com/' + userPoolId;
@@ -74,6 +75,7 @@ function loginUser(username, password) {
 
    cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
+         user = cognitoUser;
          alert(username + ' Logged In');
       },
       onFailure: (err) => {
@@ -91,6 +93,7 @@ function getSession() {
             logoutUser();
             return;
          }
+         user = cognitoUser;
          $('.session').text(session.getIdToken().getJwtToken());
       });
    }
@@ -99,17 +102,31 @@ function getSession() {
 
 function logoutUser() {
    var cognitoUser = userPool.getCurrentUser();
-   alert('Logged Out');
    if (cognitoUser != null) cognitoUser.signOut();
+   alert('Logged Out - Reloading Page');
+   location.reload();
 }
 
-/* Helper Functions */
+function getUserAttributes(){
+   var cognitoUser = userPool.getCurrentUser();
 
-function setCredentials(token)
-{
-   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: identityPoolId,
-      Logins: {}
-   });
-   AWS.config.credentials.params.Logins[loginId] = token;
+   if (cognitoUser != null) {
+      cognitoUser.getSession(function (err, session) {
+         if (err) {
+            alert('User not logged in');
+            return;
+         }
+         cognitoUser.getUserAttributes(function(err, data){
+            if(err){
+               alert('error geting profile data');
+            }
+            else{
+               $('#profileName').text(data[1].Value);
+               $('#profileEmail').text(data[1].Value);
+            }
+         })
+      });
+   }
+
+   else alert('User not logged in');
 }
