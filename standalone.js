@@ -6,34 +6,34 @@ var region = 'us-east-1';
 
 // constructed
 var loginId = 'cognito-idp.' + region + '.amazonaws.com/' + userPoolId;
-var poolData = {
+var pool = {
    UserPoolId: userPoolId,
    ClientId: appClientId
 };
 
 function registerUser(user)
 {
-   // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-   AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+   // Required as mock data
+   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
 
-   var attributeList = [];
+   var attributes = [];
 
-   var dataEmail = {
+   var emailData = {
       Name: 'email',
       Value: user.email
    };
 
-   var dataName = {
+   var nameData = {
       Name: 'name',
       Value: user.name
    };
 
-   attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
-   attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataName));
+   attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(emailData));
+   attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(nameData));
 
-   userPool.signUp(user.username, user.password, attributeList, null, function (err, result) {
+   userPool.signUp(user.username, user.password, attributes, null, function (err, result) {
       if (err) {
          console.log(err);
          return;
@@ -44,10 +44,10 @@ function registerUser(user)
 
 function confirmUser(username, code)
 {
-   // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-   AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+   // Required as mock data
+   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
 
    var userData = {
       Username: username,
@@ -67,10 +67,10 @@ function confirmUser(username, code)
 
 function loginUser(username, password)
 {
-   // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-   AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+   // Required as mock data
+   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
 
    var authenticationData = {
       Username: username,
@@ -89,7 +89,6 @@ function loginUser(username, password)
    cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
          alert(username + ' Logged In');
-         setCredentials(result.getIdToken().getJwtToken());
       },
       onFailure: (err) => {
          console.log(err);
@@ -99,7 +98,7 @@ function loginUser(username, password)
 
 function getSession()
 {
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
 
    var cognitoUser = userPool.getCurrentUser();
 
@@ -110,7 +109,6 @@ function getSession()
             return;
          }
          $('.session').text(session.getIdToken().getJwtToken());
-         setCredentials(session.getIdToken().getJwtToken());
       });
    }
    else logoutUser();
@@ -118,7 +116,7 @@ function getSession()
 
 function logoutUser()
 {
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
    var cognitoUser = userPool.getCurrentUser();
    alert('Logged Out');
    if (cognitoUser != null) cognitoUser.signOut();
