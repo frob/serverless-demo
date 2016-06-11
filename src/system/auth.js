@@ -13,7 +13,7 @@ export class Auth{
    appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 
    // constructed
-   poolData = {
+   pool = {
       UserPoolId: this.userPoolId,
       ClientId: this.appClientId
    };
@@ -23,27 +23,27 @@ export class Auth{
    }
 
    registerUser(user) {
-      // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-      AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+      // Required as mock credentials
+      AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
 
-      let attributeList = [];
+      let attributes = [];
 
-      let dataEmail = {
+      let emailData = {
          Name: 'email',
          Value: user.email
       };
       
-      let dataName = {
+      let nameData = {
          Name: 'name',
          Value: user.name
       };
 
-      attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
-      attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataName));
+      attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(emailData));
+      attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(nameData));
 
-      userPool.signUp(user.username, user.password, attributeList, null, (err, result) => {
+      userPool.signUp(user.username, user.password, attributes, null, (err, result) => {
          if (err) {
             console.log(err);
             return;
@@ -53,10 +53,10 @@ export class Auth{
    }
 
    confirmUser(username, code){
-      // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-      AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+      // Required as mock credentials
+      AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
 
       let userData = {
          Username: username,
@@ -76,9 +76,9 @@ export class Auth{
 
    loginUser(username, password){
       // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-      AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+      AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
 
       let authenticationData = {
          Username: username,
@@ -105,7 +105,7 @@ export class Auth{
    }
 
    getSession(){
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
 
       let cognitoUser = userPool.getCurrentUser();
 
@@ -122,7 +122,7 @@ export class Auth{
    }
    
    logoutUser(){
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
       let cognitoUser = userPool.getCurrentUser();
       this.session.user = null;
       if(cognitoUser != null) cognitoUser.signOut();
