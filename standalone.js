@@ -1,20 +1,19 @@
+// Required as mock data
+AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
+
 // App specific
 var userPoolId = 'us-east-1_fgCWraBkF';
 var appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 
 // constructed
-var pool = {
+var poolData = {
    UserPoolId: userPoolId,
    ClientId: appClientId
 };
 
-function registerUser(user)
-{
-   // Required as mock data
-   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
+var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
 
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
-
+function registerUser(user) {
    var attributes = [];
 
    var emailData = {
@@ -39,13 +38,7 @@ function registerUser(user)
    });
 }
 
-function confirmUser(username, code)
-{
-   // Required as mock data
-   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
-
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
-
+function confirmUser(username, code) {
    var userData = {
       Username: username,
       Pool: userPool
@@ -53,7 +46,7 @@ function confirmUser(username, code)
 
    var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
 
-   cognitoUser.confirmRegistration(code, true, function (err, result){
+   cognitoUser.confirmRegistration(code, true, function (err, result) {
       if (err) {
          console.log(err);
          return;
@@ -62,13 +55,7 @@ function confirmUser(username, code)
    });
 }
 
-function loginUser(username, password)
-{
-   // Required as mock data
-   AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
-
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
-
+function loginUser(username, password) {
    var authenticationData = {
       Username: username,
       Password: password
@@ -93,14 +80,11 @@ function loginUser(username, password)
    });
 }
 
-function getSession()
-{
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
-
+function getSession() {
    var cognitoUser = userPool.getCurrentUser();
 
    if (cognitoUser != null) {
-      cognitoUser.getSession(function(err, session){
+      cognitoUser.getSession(function (err, session) {
          if (err) {
             logoutUser();
             return;
@@ -111,9 +95,7 @@ function getSession()
    else logoutUser();
 }
 
-function logoutUser()
-{
-   var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(pool);
+function logoutUser() {
    var cognitoUser = userPool.getCurrentUser();
    alert('Logged Out');
    if (cognitoUser != null) cognitoUser.signOut();

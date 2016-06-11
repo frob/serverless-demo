@@ -6,35 +6,35 @@ import {inject} from 'aurelia-framework';
 import {Session} from './session';
 
 @inject(Session)
-export class Auth{
+export class Auth {
 
-   // App specific
    userPoolId = 'us-east-1_fgCWraBkF';
    appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 
-   // constructed
-   pool = {
-      UserPoolId: this.userPoolId,
-      ClientId: this.appClientId
-   };
-
-   constructor(session){
+   constructor(session) {
       this.session = session;
-   }
 
-   registerUser(user) {
       // Required as mock credentials
       AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
 
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
+      // pool data
+      this.poolData = {
+         UserPoolId: this.userPoolId,
+         ClientId: this.appClientId
+      };
 
+      // create user pool
+      this.userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
+   }
+
+   registerUser(user) {
       let attributes = [];
 
       let emailData = {
          Name: 'email',
          Value: user.email
       };
-      
+
       let nameData = {
          Name: 'name',
          Value: user.name
@@ -43,7 +43,7 @@ export class Auth{
       attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(emailData));
       attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(nameData));
 
-      userPool.signUp(user.username, user.password, attributes, null, (err, result) => {
+      this.userPool.signUp(user.username, user.password, attributes, null, (err, result) => {
          if (err) {
             console.log(err);
             return;
@@ -52,15 +52,10 @@ export class Auth{
       });
    }
 
-   confirmUser(username, code){
-      // Required as mock credentials
-      AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
-
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
-
+   confirmUser(username, code) {
       let userData = {
          Username: username,
-         Pool: userPool
+         Pool: this.userPool
       };
 
       let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
@@ -74,27 +69,22 @@ export class Auth{
       });
    }
 
-   loginUser(username, password){
-      // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-      AWSCognito.config.update({accessKeyId: 'mock', secretAccessKey: 'mock'});
-
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
-
-      let authenticationData = {
+   loginUser(username, password) {
+      let authData = {
          Username: username,
          Password: password
       };
 
-      let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+      let authDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authData);
 
       let userData = {
          Username: username,
-         Pool: userPool
+         Pool: this.userPool
       };
 
       let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
 
-      cognitoUser.authenticateUser(authenticationDetails, {
+      cognitoUser.authenticateUser(authDetails, {
          onSuccess: (result) => {
             this.session.user = cognitoUser;
          },
@@ -104,10 +94,8 @@ export class Auth{
       });
    }
 
-   getSession(){
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
-
-      let cognitoUser = userPool.getCurrentUser();
+   getSession() {
+      let cognitoUser = this.userPool.getCurrentUser();
 
       if (cognitoUser != null) {
          cognitoUser.getSession((err, session) => {
@@ -120,11 +108,10 @@ export class Auth{
       }
       else this.logoutUser();
    }
-   
-   logoutUser(){
-      let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.pool);
-      let cognitoUser = userPool.getCurrentUser();
+
+   logoutUser() {
+      let cognitoUser = this.userPool.getCurrentUser();
       this.session.user = null;
-      if(cognitoUser != null) cognitoUser.signOut();
+      if (cognitoUser != null) cognitoUser.signOut();
    }
 }
