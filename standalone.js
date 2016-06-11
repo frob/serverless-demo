@@ -1,7 +1,7 @@
 // App specific
 var identityPoolId = 'us-east-1:35b6094e-ff5b-44a5-ac52-e879ae263c91';
-var userPoolId = 'us-east-1_9n2I4LpaH';//'us-east-1_fgCWraBkF';
-var appClientId = '4s9cfpggqrsqgccachl12en215';//'57lq262n28o7ddt8i36jcjj7qd';
+var userPoolId = 'us-east-1_fgCWraBkF';
+var appClientId = '57lq262n28o7ddt8i36jcjj7qd';
 var region = 'us-east-1';
 
 // constructed
