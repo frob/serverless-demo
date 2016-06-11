@@ -131,9 +131,9 @@ export class Auth {
       AWS.config.credentials.params.Logins[this.loginId] = token;
    }
 
-   getUserAttributes(cognitoUser){
+   getUserAttributes(){
       return new Promise((resolve, reject) => {
-         cognitoUser.getUserAttributes((err, result) => {
+         this.session.user.getUserAttributes((err, result) => {
             if(err) reject(err);
             else resolve(result);
          })

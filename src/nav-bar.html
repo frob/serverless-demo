@@ -18,7 +18,7 @@
             <a class="nav-link" route-href="route: login">Login</a>
          </li>
          <li class="nav-item" if.bind="session.user">
-            <a href="#" class="nav-link">${session.user.username}</a>
+            <a route-href="route:profile;" class="nav-link text-uppercase">${session.user.username}</a>
          </li>
          <li class="nav-item" if.bind="session.user">
             <a href="#" class="nav-link" click.delegate="userLogout()"><small>logout</small></a>

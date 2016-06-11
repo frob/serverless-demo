@@ -17,7 +17,8 @@ export class App {
          {route: 'page2', name: 'page2', moduleId: 'page2', nav: true, title: 'Page2'},
          {route: 'register', name: 'register', moduleId: 'auth/register', nav: false, title: 'Register'},
          {route: 'confirm', name: 'confirm', moduleId: 'auth/confirm', nav: false, title: 'Confirm'},
-         {route: 'login', name: 'login', moduleId: 'auth/login', nav: false, title: 'Login'}
+         {route: 'login', name: 'login', moduleId: 'auth/login', nav: false, title: 'Login'},
+         {route: 'profile', name: 'profile', moduleId: 'profile/index', nav: false, title: 'profile'}
       ]);
 
       this.router = router;
