@@ -4,41 +4,53 @@
 
 import {inject} from 'aurelia-framework';
 import {Auth} from '../system/auth';
+import {Session} from'../system/session';
 
-@inject(Auth)
+@inject(Auth, Session)
 export class Index {
+   files = [];
 
-   fileChooser = [];
-
-   constructor(auth) {
+   constructor(auth, session) {
       this.auth = auth;
-
-      //AWS.config.credentials.get();
-      this.bucket = new AWS.S3({params: {Bucket: 'serverless-inbox'}});
+      this.session = session;
+      this.bucket = new AWS.S3({params: {Bucket: 'serverless-objects'}});
+      this.lambda = new AWS.Lambda();
    }
 
-   uploadFile() {
-      let file = this.fileChooser.files[0];
-      let params = {Key: file.name, ContentType: file.type, Body: file};
-      this.bucket.upload(params, (err, data) => {
-         if (err) console.log(err);
-         else(console.log(data));
-      })
-   }
 
    getProfile() {
       this.auth.getUserAttributes()
          .then(response => {
-            response.map(item => {
-               return this[item.Name] = item.Value;
-            })
+            return response;
          })
          .catch(error => {
             console.log(error);
          })
    }
 
+   getDocuments() {
+      return new Promise((resolve, reject) => {
+         this.lambda.invoke({FunctionName: 'serverless-query', Payload: JSON.stringify({})}, (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+         });
+      });
+   }
+
    activate() {
-      this.getProfile();
+      let calls = [];
+
+      calls.push(this.auth.getUserAttributes());
+      calls.push(this.getDocuments());
+
+      return Promise.all(calls)
+         .then(responses => {
+            responses[0].map(item => {
+               this[item.Name] = item.Value;
+            });
+            return JSON.parse(responses[1].Payload).Items.map(item =>{
+               return this.files.push(item);
+            });
+         })
    }
 }

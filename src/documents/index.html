@@ -1,0 +1,30 @@
+<template>
+   <section id="page-editor">
+      <div class="container">
+         <div class="row">
+            <div class="col-xs-12">
+               <div innerHTML.bind="translation"></div>
+               <form class="m-t-3">
+                  <fieldset class="form-group">
+                     <label for="markdown" class="sr-only">Markdown</label>
+                     <textarea class="form-control" value.bind="markdown" id="markdown" keyup.trigger="translate()"></textarea>
+                     <small class="text-muted"><i class="fa fa-check"></i> markdown compatible</small>
+                  </fieldset>
+               </form>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-xs-12">
+               <button class="btn btn-primary" click.delegate="createPDF()">Create PDF</button>
+            </div>
+            <div class="col-xs-12">
+               <div repeat.for="file of files">
+                  <a href="http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${session.user.username}/${file}" target="_blank">
+                     http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${session.user.username}/${file}
+                  </a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+</template>

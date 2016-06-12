@@ -100,18 +100,32 @@ export class Auth {
    getSession() {
       let cognitoUser = this.userPool.getCurrentUser();
 
-      if (cognitoUser != null) {
+      return new Promise((resolve, reject) => {
          cognitoUser.getSession((err, result) => {
-            if (err) {
+            if(err){
                this.logoutUser();
+               reject('User not logged in');
             }
             else {
                this.setCredentials(result.getIdToken().getJwtToken());
                this.session.user = cognitoUser;
+               resolve(true);
             }
-         });
-      }
-      else this.logoutUser();
+         })
+      });
+      
+      // if (cognitoUser != null) {
+      //    cognitoUser.getSession((err, result) => {
+      //       if (err) {
+      //          this.logoutUser();
+      //       }
+      //       else {
+      //          this.setCredentials(result.getIdToken().getJwtToken());
+      //          this.session.user = cognitoUser;
+      //       }
+      //    });
+      // }
+      // else this.logoutUser();
    }
 
    logoutUser() {

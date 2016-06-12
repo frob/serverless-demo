@@ -16,8 +16,9 @@
       </div>
       <div class="row">
          <div class="col-xs-12">
-            <input ref="fileChooser" type="file">
-            <button class="btn btn-primary" click.delegate="uploadFile()">Upload</button>
+            <div repeat.for="file of files">
+               <a target="_blank" href="http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${file.id}/${file.document}">http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${file.id}/${file.document}</a>
+            </div>
          </div>
       </div>
    </div>

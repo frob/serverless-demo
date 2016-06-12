@@ -18,14 +18,15 @@ export class App {
          {route: 'register', name: 'register', moduleId: 'auth/register', nav: false, title: 'Register'},
          {route: 'confirm', name: 'confirm', moduleId: 'auth/confirm', nav: false, title: 'Confirm'},
          {route: 'login', name: 'login', moduleId: 'auth/login', nav: false, title: 'Login'},
-         {route: 'profile', name: 'profile', moduleId: 'profile/index', nav: false, title: 'profile'}
+         {route: 'profile', name: 'profile', moduleId: 'profile/index', nav: false, title: 'profile'},
+         {route: 'documents', name: 'documents', moduleId: 'documents/index', nav: true, title: 'documents'}
       ]);
 
       this.router = router;
    }
 
    activate(){
-      this.auth.getSession();
+      return this.auth.getSession();
    }
 }
 
