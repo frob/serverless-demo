@@ -17,20 +17,9 @@ export class Index {
       this.lambda = new AWS.Lambda();
    }
 
-
-   getProfile() {
-      this.auth.getUserAttributes()
-         .then(response => {
-            return response;
-         })
-         .catch(error => {
-            console.log(error);
-         })
-   }
-
    getDocuments() {
       return new Promise((resolve, reject) => {
-         this.lambda.invoke({FunctionName: 'serverless-query', Payload: JSON.stringify({})}, (err, data) => {
+         this.lambda.invoke({FunctionName: 'serverless-query'}, (err, data) => {
             if (err) reject(err);
             else resolve(data);
          });

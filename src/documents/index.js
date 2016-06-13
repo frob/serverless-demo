@@ -20,13 +20,13 @@ export class Index {
 
    createPDF() {
       this.lambda.invoke({
-         FunctionName: 'pdf',
+         FunctionName: 'serverless-pdf',
          Payload: JSON.stringify({html: this.translation})
       }, (err, data) => {
          if (err) console.log(err);
          else {
             console.log(data.Payload);
-            this.files.push(JSON.parse(data.Payload).filename);
+            this.files.push(JSON.parse(data.Payload));
          }
       })
    }

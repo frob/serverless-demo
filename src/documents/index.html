@@ -19,8 +19,8 @@
             </div>
             <div class="col-xs-12">
                <div repeat.for="file of files">
-                  <a href="http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${session.user.username}/${file}" target="_blank">
-                     http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${session.user.username}/${file}
+                  <a href="http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${file.id}/${file.filename}" target="_blank">
+                     http://serverless-objects.s3-website-us-east-1.amazonaws.com/ugc/${file.id}/${file.filename}
                   </a>
                </div>
             </div>

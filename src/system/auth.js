@@ -100,32 +100,21 @@ export class Auth {
    getSession() {
       let cognitoUser = this.userPool.getCurrentUser();
 
-      return new Promise((resolve, reject) => {
-         cognitoUser.getSession((err, result) => {
-            if(err){
-               this.logoutUser();
-               reject('User not logged in');
-            }
-            else {
-               this.setCredentials(result.getIdToken().getJwtToken());
-               this.session.user = cognitoUser;
-               resolve(true);
-            }
-         })
-      });
-      
-      // if (cognitoUser != null) {
-      //    cognitoUser.getSession((err, result) => {
-      //       if (err) {
-      //          this.logoutUser();
-      //       }
-      //       else {
-      //          this.setCredentials(result.getIdToken().getJwtToken());
-      //          this.session.user = cognitoUser;
-      //       }
-      //    });
-      // }
-      // else this.logoutUser();
+      if (cognitoUser) {
+         return new Promise((resolve, reject) => {
+            cognitoUser.getSession((err, result) => {
+               if (err) {
+                  this.logoutUser();
+                  reject('User not logged in');
+               }
+               else {
+                  this.setCredentials(result.getIdToken().getJwtToken());
+                  this.session.user = cognitoUser;
+                  resolve(true);
+               }
+            })
+         });
+      }
    }
 
    logoutUser() {
@@ -143,10 +132,10 @@ export class Auth {
       })
    }
 
-   setCredentials(token){
+   setCredentials(token) {
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
          IdentityPoolId: this.identityPoolId,
-         Logins:{}
+         Logins: {}
       });
       AWS.config.credentials.params.Logins[this.loginId] = token;
    }
