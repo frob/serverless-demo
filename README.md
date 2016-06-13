@@ -28,4 +28,4 @@ simple - example of simple login using Cognito User Pools
 federated - combines simple login with Cognito Identity Pools to create a federated login with access to AWS
 
 ###Standalone jQuery Examples
-For a standalone example see standalone.js and stanalone.html in the root of this project.
+For a standalone example see standalone.js and stanalone.html in the root of this project. The standalone example shows only the basic authentication examples.
